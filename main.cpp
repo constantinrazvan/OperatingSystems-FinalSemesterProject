@@ -6,74 +6,14 @@
 #include <filesystem>
 
 using namespace std;
-namespace fs = std::filesystem;
 
 int THREADS = 0; // number of threads
 int variable = 0; // the pre-inited variable for user to work with
 
-// function to get the number of available threads
 void checkAndAssignThreads() {
     unsigned int threads = thread::hardware_concurrency();
     THREADS = (int)threads;
     cout << "Number of threads: " << THREADS << endl;
-}
-
-// Menu for checking usability of the program
-void checkUsability() {
-    system("cls");
-    checkAndAssignThreads();
-    cout << "\nWhat would you like to do?\n";
-    cout << "1. Modify variable" << endl;
-    cout << "2. Modify file" << endl;
-    cout << "3. Exit" << endl;
-    cout << "Enter your choice: ";
-}
-
-// Menu for variable operations
-void showMenuForVariable() {
-    int varChoice;
-    do {
-        cout << "\nVariable Menu:\n";
-        cout << "1. Increment variable by 1\n";
-        cout << "2. Decrement variable by 1\n";
-        cout << "3. Print variable\n";
-        cout << "4. Multiply variable by 2\n";
-        cout << "5. Go back to main menu\n";
-        cout << "Enter your choice: ";
-        cin >> varChoice;
-
-        switch (varChoice) {
-            case 1:
-                system("cls");
-                variable++;
-                cout << "[INFO] Variable incremented. Current value: " << variable << endl;
-                break;
-            case 2:
-                system("cls");
-                if(variable <= 0 ) {
-                    cout << "[ERROR] Cannot decrement below 0" << endl;
-                } else {
-                    variable--;
-                    cout << "[INFO] Variable decremented. Current value: " << variable << endl;
-                }
-                break;
-            case 3:
-                system("cls");
-                cout << "Current value of variable: " << variable << endl;
-                break;
-            case 4:
-                system("cls");
-                variable *= 2;
-                cout << "[INFO] Variable multiplied by 2. Current value: " << variable << endl;
-                break;
-            case 5:
-                system("cls");
-                checkUsability();
-                break;
-            default:
-                cout << "Invalid choice, please try again." << endl;
-        }
-    } while (varChoice != 5);  
 }
 
 // Function to check if a file exists
@@ -83,10 +23,10 @@ bool checkFileForExistence(const string& fullPath) {
 }
 
 // Function to create a new file
-void createFile(const string& path, const string& filename) {
+void createFile(string& path, string& filename) {
     string fullPath = path + filename;
     if (!checkFileForExistence(fullPath)) {
-        ofstream newFile(fullPath); 
+        ofstream newFile(fullPath);
         if (newFile) {
             cout << "File created: " << fullPath << endl;
         } else {
@@ -99,8 +39,8 @@ void createFile(const string& path, const string& filename) {
 }
 
 // Function to delete a file
-void deleteFile(const string& fullPath, const string& filename) {
-    string completePath = fullPath + filename + ".txt"; 
+void deleteFile(string& fullPath, string& filename) {
+    string completePath = fullPath + filename + ".txt";
 
     ifstream file(completePath);
     if (file.good()) {  // checking if the file exists
@@ -117,7 +57,7 @@ void deleteFile(const string& fullPath, const string& filename) {
 }
 
 // Function to search content in a file
-void searchInFile(const string& fullPath, const string& filename, const string& searchContent) {
+void searchInFile(string& fullPath, string& filename, string& searchContent) {
     string completePath = fullPath + filename + ".txt";  // Concatenate the full path and filename
 
     ifstream file(completePath);
@@ -142,7 +82,7 @@ void searchInFile(const string& fullPath, const string& filename, const string& 
 }
 
 // Function to read the content of a file
-void readFile(const string& path, const string& filename) {
+void readFile(string& path, string& filename) {
     string fullPath = path + filename + ".txt";
     ifstream file(fullPath);
 
@@ -158,106 +98,195 @@ void readFile(const string& path, const string& filename) {
     }
 }
 
-// Menu for file operations
+void incrementVariable(int& variable) {
+    variable += 1;
+}
+
+void decrementVariable(int& variable) {
+    if (variable <= 0) {
+        cout << "[ERROR] Cannot decrement below 0" << endl;
+    } else {
+        variable--;
+    }
+}
+
+void printVariable(int& variable) {
+    cout << "[INFO] Variable value: " << variable << endl;
+}
+
+void multiplyVariable(int& variable) {
+    variable *= 2;
+}
+
+// Function to get the number of available threads
+void checkAndAssignThreads() {
+    unsigned int threads = std::thread::hardware_concurrency();
+    THREADS = (int)threads;
+    std::cout << "Number of threads: " << THREADS << std::endl;
+}
+
+// Menu for checking usability of the program
+void checkUsability() {
+    system("cls");
+    checkAndAssignThreads();
+    std::cout << "\nWhat would you like to do?\n";
+    std::cout << "1. Modify variable" << std::endl;
+    std::cout << "2. Modify file" << std::endl;
+    std::cout << "3. Exit" << std::endl;
+    std::cout << "Enter your choice: ";
+}
+
+// Menu for variable operations
+void showMenuForVariable() {
+    int varChoice;
+    do {
+        std::cout << "\nVariable Menu:\n";
+        std::cout << "1. Increment variable by 1\n";
+        std::cout << "2. Decrement variable by 1\n";
+        std::cout << "3. Print variable\n";
+        std::cout << "4. Multiply variable by 2\n";
+        std::cout << "5. Go back to main menu\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> varChoice;
+
+        switch (varChoice) {
+            case 1:
+                system("cls");
+                incrementVariable(variable);
+                std::cout << "[INFO] Variable incremented. Current value: " << variable << std::endl;
+                break;
+            case 2:
+                system("cls");
+
+                if (variable <= 0) {
+                    cout << "[ERROR] Cannot decrement below 0" << endl;
+                } else {
+                    variable--;
+                    std::cout << "[INFO] Variable decremented. Current value: " << variable << std::endl;
+                }
+
+                break;
+            case 3:
+                system("cls");
+                printVariable(variable);
+                break;
+            case 4:
+                system("cls");
+                multiplyVariable(variable);
+                std::cout << "[INFO] Variable multiplied. Current value: " << variable << std::endl;
+
+                break;
+            case 5:
+                system("cls");
+                checkUsability();
+                break;
+            default:
+                std::cout << "Invalid choice, please try again." << std::endl;
+        }
+    } while (varChoice != 5);
+}
+
 void showMenuForFile() {
     int fileChoice;
-    string filePath;
+    std::string filePath;
 
-    cout << "Before diving into file operations, please provide the path to the file." << endl;
-    cout << "Enter the path to the file: ";
-    cin >> filePath;
+    std::cout << "Before diving into file operations, please provide the path to the file." << std::endl;
+    std::cout << "Enter the path to the file: ";
+    std::cin >> filePath;
+
+    std::string filename = "";
+    std::string searchContent = "";
 
     if (filePath.empty()) {
-        cout << "Invalid file path. Please try again." << endl;
-    } else {  
-        string newFilePath = filePath + "\\";
+        std::cout << "Invalid file path. Please try again." << std::endl;
+    } else {
+        std::string newFilePath = filePath + "\\"; // Set full path
+
         do {
-            cout << "Your current path is: " << newFilePath << endl;
-            cout << "\nFile Menu:\n";
-            cout << "1. Create a new file in path\n";
-            cout << "2. Remove file in path\n";
-            cout << "3. Search in file\n";
-            cout << "4. Print file contents\n";
-            cout << "5. Change Path\n";
-            cout << "6. Go back to main menu\n";
-            cout << "Enter your choice: ";
-            cin >> fileChoice;
+            std::cout << "Your current path is: " << newFilePath << std::endl;
+            std::cout << "\nFile Menu:\n";
+            std::cout << "1. Create a new file in path\n";
+            std::cout << "2. Remove file in path\n";
+            std::cout << "3. Search in file\n";
+            std::cout << "4. Print file contents\n";
+            std::cout << "5. Change Path\n";
+            std::cout << "6. Go back to main menu\n";
+            std::cout << "Enter your choice: ";
+            std::cin >> fileChoice;
 
             switch (fileChoice) {
-                case 1: {
-                    string fileName; 
-                    cout << "Enter the name of the file to create: ";
-                    cin >> fileName;
-                    fileName = fileName + ".txt";
-                    createFile(newFilePath, fileName);
+                case 1:
+                    system("cls");
+                    // Get the filename from the user
+                    std::cout << "Enter the filename to create: ";
+                    std::cin >> filename;
+                    createFile(newFilePath, filename);
                     break;
-                }
-                case 2: {
-                    string fileName;
-                    cout << "Enter the name of the file to delete: ";
-                    cin >> fileName;
-
-                    fileName = fileName + ".txt";
-                    deleteFile(newFilePath, fileName);
+                case 2:
+                    system("cls");
+                    // Get the filename to delete
+                    std::cout << "Enter the filename to delete: ";
+                    std::cin >> filename;
+                    deleteFile(newFilePath, filename);
                     break;
-                }
-                case 3: {
-                    string searchContent;
-                    string filename; 
-
-                    cout << "Enter the name of the file to search in: ";
-                    cin >> filename;
-
-                    cout << "Enter the content to search for: ";
-                    cin >> searchContent;
+                case 3:
+                    system("cls");
+                    // Get search content and filename
+                    std::cout << "Enter the filename to search: ";
+                    std::cin >> filename;
+                    std::cout << "Enter search content: ";
+                    std::cin.ignore();  // To handle any leftover newline character
+                    std::getline(std::cin, searchContent);
                     searchInFile(newFilePath, filename, searchContent);
                     break;
-                }
-                case 4: {
-                    string fileName;
-                    cout << "Enter the name of the file to read: ";
-                    cin >> fileName;
-                    readFile(newFilePath, fileName);
+                case 4:
+                    system("cls");
+                    // Get the filename to read
+                    std::cout << "Enter the filename to read: ";
+                    std::cin >> filename;
+                    readFile(newFilePath, filename);
                     break;
-                }
                 case 5:
-                    cout << "Enter the new path: ";
-                    cin >> filePath;
-                    newFilePath = filePath + "\\";
+                    system("cls");
+                    std::cout << "Enter new path: ";
+                    std::cin >> filePath;
+                    newFilePath = filePath + "\\"; // Update path
                     break;
                 case 6:
                     system("cls");
                     checkUsability();
                     break;
                 default:
-                    cout << "Invalid choice, please try again." << endl;
-                    break;
+                    std::cout << "Invalid choice, please try again." << std::endl;
             }
-        } while (fileChoice != 6);  
+        } while (fileChoice != 6);
     }
 }
 
 int main() {
-    int choice;
-    do {
-        checkUsability();
-        cin >> choice;
+    // Main menu loop
+    checkUsability();
 
-        switch (choice) {
+    int mainChoice;
+    do {
+        std::cin >> mainChoice;
+
+        switch (mainChoice) {
             case 1:
+                system("cls");
                 showMenuForVariable();
                 break;
             case 2:
+                system("cls");
                 showMenuForFile();
                 break;
             case 3:
-                cout << "Exiting program." << endl;
+                std::cout << "Exiting program..." << std::endl;
                 break;
             default:
-                cout << "Invalid choice. Please try again." << endl;
-                break;
+                std::cout << "Invalid choice, please try again." << std::endl;
         }
-    } while (choice != 3);
+    } while (mainChoice != 3);
 
     return 0;
 }
