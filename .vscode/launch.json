@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/razva/Desktop/OS Final Project- Pana Constantin-Razvan CS2",
-      "program": "c:/Users/razva/Desktop/OS Final Project- Pana Constantin-Razvan CS2/build/Debug/outDebug",
+      "cwd": "c:/Users/razva/Desktop/OperatingSystems-FinalSemesterProject",
+      "program": "c:/Users/razva/Desktop/OperatingSystems-FinalSemesterProject/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
