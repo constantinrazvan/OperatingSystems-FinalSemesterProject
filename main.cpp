@@ -14,10 +14,16 @@ mutex ioMutex;
 mutex fileMutex;
 
 // mutex for variable operations
-mutex variableMutex; 
+mutex variableMutex;
+
+// mutex for log file
+mutex logMutex;
+
+// mutex for user's threads
+mutex usersThreadsMutex;
 
 // variable to work with
-int variable = 0;  
+int variable = 0;
 
 // Function declarations
 int checkUsersThreads();
@@ -34,13 +40,20 @@ void incrementVariable();
 void decrementVariable();
 void printVariable();
 void multiplyVariable();
+void send_message(const string& message);
 
 void clrscr();
 
 int main() {
+    {
+        ofstream logFile("thread_monitor.log", ios::trunc);
+        logFile << "=== Thread Monitor Started ===" << endl;
+        logFile.close();
+    }
+
     int userChoice;
     int userThreads = checkUsersThreads();
-
+    string checkThreads = "You have left " + to_string(userThreads) + " threads.";
     do {
         {
             lock_guard<mutex> lock(ioMutex);
@@ -61,51 +74,175 @@ int main() {
 
         cin >> userChoice;
 
-        switch (userChoice) {
+         switch (userChoice) {
             case 1: {
-                thread createThread(createFile);
-                createThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 1 has started: creating file.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread createThread([&]() {
+                        createFile();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 1 is waiting.");
+                    createThread.join();
+                    send_message("Thread 1 has finished: file created.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 2: {
-                thread deleteThread(deleteFile);
-                deleteThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 2 has started: deleting file.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread deleteThread([&]() {
+                        deleteFile();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 2 is waiting.");
+                    deleteThread.join();
+                    send_message("Thread 2 has finished: file deleted.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 3: {
-                thread searchThread(searchInFile);
-                searchThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 3 has started: searching in file.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread searchThread([&]() {
+                        searchInFile();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 3 is waiting.");
+                    searchThread.join();
+                    send_message("Thread 3 has finished: search completed.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 4: {
-                thread readThread(readFile);
-                readThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 4 has started: reading file.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread readThread([&]() {
+                        readFile();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 4 is waiting.");
+                    readThread.join();
+                    send_message("Thread 4 has finished: file read.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 5: {
-                thread incrementThread(incrementVariable);
-                incrementThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 5 has started: incrementing variable.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread incrementThread([&]() {
+                        incrementVariable();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 5 is waiting.");
+                    incrementThread.join();
+                    send_message("Thread 5 has finished: variable incremented.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 6: {
-                thread decrementThread(decrementVariable);
-                decrementThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 6 has started: decrementing variable.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread decrementThread([&]() {
+                        decrementVariable();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 6 is waiting.");
+                    decrementThread.join();
+                    send_message("Thread 6 has finished: variable decremented.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
+                break;
             }
             case 7: {
-                thread printVariableThread(printVariable);
-                printVariableThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 7 has started: printing variable.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread printVariableThread([&]() {
+                        printVariable();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 7 is waiting.");
+                    printVariableThread.join();
+                    send_message("Thread 7 has finished: variable printed.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 8: {
-                thread multiplyThread(multiplyVariable);
-                multiplyThread.join();
+                if (userThreads > 0) {
+                    send_message("Thread 8 has started: multiplying variable.");
+                    userThreads--;
+                    send_message("Available threads: " + to_string(userThreads));
+
+                    thread multiplyThread([&]() {
+                        multiplyVariable();
+                        userThreads++;
+                    });
+
+                    send_message("Thread 8 is waiting.");
+                    multiplyThread.join();
+                    send_message("Thread 8 has finished: variable multiplied.");
+                    send_message("Available threads: " + to_string(userThreads));
+                } else {
+                    send_message("No available threads left!");
+                }
                 break;
             }
             case 9: {
+                send_message("Program is exiting...");
                 lock_guard<mutex> lock(ioMutex);
                 cout << "Program is exiting...\n";
+                break;
             }
             default: {
+                send_message("Invalid choice entered.");
                 lock_guard<mutex> lock(ioMutex);
                 cout << "Invalid choice, try again.\n";
                 break;
@@ -157,7 +294,7 @@ bool checkFileExists(const string& filePath) {
 }
 
 void createFile() {
-    system("CLS");
+    system("cls");
     string filename, filePath;
     getUserInput(filename, filePath);
 
@@ -176,7 +313,7 @@ void createFile() {
 }
 
 void readFile() {
-    system("CLS");
+    system("cls");
     string filename, filePath;
     getUserInput(filename, filePath);
 
@@ -193,6 +330,9 @@ void readFile() {
                 cout << line << endl;
             }
             file.close();
+        } else {
+            lock_guard<mutex> ioLock(ioMutex);
+            cout << "Failed to open file: " << fullPath << endl;
         }
     } else {
         lock_guard<mutex> ioLock(ioMutex);
@@ -200,8 +340,9 @@ void readFile() {
     }
 }
 
+
 void deleteFile() {
-    system("CLS");
+    system("cls");
     string filename, filePath;
     getUserInput(filename, filePath);
 
@@ -223,7 +364,7 @@ void deleteFile() {
 }
 
 void searchInFile() {
-    system("CLS");
+    system("cls");
     string filename, filePath, searchTerm;
     getUserInput(filename, filePath);
 
@@ -265,32 +406,54 @@ void searchInFile() {
 }
 
 void incrementVariable() {
-    system("CLS");
-    lock_guard<mutex> lock(variableMutex);
+    system("cls");
+    lock_guard<mutex> varLock(variableMutex);
     variable++;
     lock_guard<mutex> ioLock(ioMutex);
-    cout << "[INFO] Variable incremented: " << variable << endl;
+    cout << "Variable incremented successfully!" << endl;
 }
 
 void decrementVariable() {
-    system("CLS");
-    lock_guard<mutex> lock(variableMutex);
-    variable--;
-    lock_guard<mutex> ioLock(ioMutex);
-    cout << "[INFO] Variable decremented: " << variable << endl;
+    system("cls");
+    lock_guard<mutex> varLock(variableMutex);
+    if (variable == 0) {
+        lock_guard<mutex> ioLock(ioMutex);
+        cout << "We can't decrement variable! It is 0 already!" << endl;
+    } else {
+        variable--;
+        lock_guard<mutex> ioLock(ioMutex);
+        cout << "Variable decremented successfully!" << endl;
+    }
 }
 
 void printVariable() {
-    system("CLS");
-    lock_guard<mutex> lock(variableMutex);
+    system("cls");
+    lock_guard<mutex> varLock(variableMutex);
     lock_guard<mutex> ioLock(ioMutex);
-    cout << "[INFO] Variable value: " << variable << endl;
+    cout << "Current value of variable: " << variable << endl;
 }
 
 void multiplyVariable() {
-    system("CLS");
-    lock_guard<mutex> lock(variableMutex);
+    system("cls");
+    lock_guard<mutex> varLock(variableMutex);
     variable *= 2;
     lock_guard<mutex> ioLock(ioMutex);
-    cout << "[INFO] Variable multiplied: " << variable << endl;
+    cout << "Variable multiplied successfully!" << endl;
+}
+
+void send_message(const string& message) {
+    lock_guard<mutex> logLock(logMutex);
+    ofstream logFile("thread_monitor.log", ios::app);
+
+    // Get current time
+    auto now = chrono::system_clock::now();
+    time_t current_time = chrono::system_clock::to_time_t(now);
+
+    // Format: [HH:MM:SS] Message
+    char time_str[26];
+    ctime_s(time_str, sizeof time_str, &current_time);
+    time_str[24] = '\0';  // Remove newline
+
+    logFile << "[" << time_str << "] " << message << endl;
+    logFile.close();
 }
