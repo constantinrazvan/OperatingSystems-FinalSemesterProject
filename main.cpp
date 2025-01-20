@@ -78,12 +78,18 @@ int main() {
             case 1: {
                 if (userThreads > 0) {
                     send_message("Thread 1 has started: creating file.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread createThread([&]() {
                         createFile();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 1 is waiting.");
@@ -98,12 +104,18 @@ int main() {
             case 2: {
                 if (userThreads > 0) {
                     send_message("Thread 2 has started: deleting file.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread deleteThread([&]() {
                         deleteFile();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 2 is waiting.");
@@ -118,12 +130,18 @@ int main() {
             case 3: {
                 if (userThreads > 0) {
                     send_message("Thread 3 has started: searching in file.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread searchThread([&]() {
                         searchInFile();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 3 is waiting.");
@@ -138,12 +156,18 @@ int main() {
             case 4: {
                 if (userThreads > 0) {
                     send_message("Thread 4 has started: reading file.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread readThread([&]() {
                         readFile();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 4 is waiting.");
@@ -158,12 +182,18 @@ int main() {
             case 5: {
                 if (userThreads > 0) {
                     send_message("Thread 5 has started: incrementing variable.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread incrementThread([&]() {
                         incrementVariable();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 5 is waiting.");
@@ -178,12 +208,18 @@ int main() {
             case 6: {
                 if (userThreads > 0) {
                     send_message("Thread 6 has started: decrementing variable.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread decrementThread([&]() {
                         decrementVariable();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 6 is waiting.");
@@ -198,12 +234,18 @@ int main() {
             case 7: {
                 if (userThreads > 0) {
                     send_message("Thread 7 has started: printing variable.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread printVariableThread([&]() {
                         printVariable();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 7 is waiting.");
@@ -218,12 +260,18 @@ int main() {
             case 8: {
                 if (userThreads > 0) {
                     send_message("Thread 8 has started: multiplying variable.");
-                    userThreads--;
+                    {
+                        lock_guard<mutex> lock(usersThreadsMutex);
+                        userThreads--;
+                    }
                     send_message("Available threads: " + to_string(userThreads));
 
                     thread multiplyThread([&]() {
                         multiplyVariable();
-                        userThreads++;
+                        {
+                            lock_guard<mutex> lock(usersThreadsMutex);
+                            userThreads++;
+                        }
                     });
 
                     send_message("Thread 8 is waiting.");
